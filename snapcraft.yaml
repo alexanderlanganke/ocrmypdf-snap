@@ -51,9 +51,9 @@ parts:
 #      - setuptools
 #      - tqdm
 
-    override-build: |
-      snapcraftctl build
-      sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.8/site-packages/ocrmypdf/leptonica.py
+#    override-build: |
+#      snapcraftctl build
+#      sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.8/site-packages/ocrmypdf/leptonica.py
 
 #  cleanup:
 #    after:  # Make this part run last; list all your other parts here
