@@ -36,7 +36,7 @@ parts:
   ocrmypdf:
     # See 'snapcraft plugins'
     plugin: python
-#    source: .
+    source: .
     stage-packages: [ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
 
     python-packages:
