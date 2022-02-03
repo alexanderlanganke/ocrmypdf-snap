@@ -1,7 +1,7 @@
 name: ocrmypdf # you probably want to 'snapcraft register <name>'
 title: ocrmypdf
-base: core18 # the base snap is the execution environment for this snap
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
+base: core20 # the base snap is the execution environment for this snap
+version: '0.1.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Hobby Project GUI for the Python Program "OCRmyPDF" by James R. Barlow
 description: OCRmyPDF by James R. Barlow
 grade: devel # must be 'stable' to release into candidate/stable channels
@@ -17,7 +17,9 @@ environment:
 
 apps:
   ocrmypdf:
-    command: python3 $SNAP/lib/python3.6/site-packages/ocrmypdf/__main__.py
+#    command: python3 $SNAP/lib/python3.6/site-packages/ocrmypdf/__main__.py
+    command: bin/python3.9 -m ocrmypdf
+
 #    desktop: $SNAPCRAFT_PROJECT_DIR/gui/ocrmypdfgui.desktop
 #    extensions: [gnome-3-38]
 
@@ -35,7 +37,18 @@ parts:
     # See 'snapcraft plugins'
     plugin: python
     source: .
-    stage-packages: [ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
+    build-environment:
+      - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
+      # The gnome-3-38 ext sets both env variables to point to its own Python v3.8, so we need to fix them manually.
+      # $SNAPCRAFT_PART_INSTALL/bin is where the python3.9 executable lives.
+      - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
+      - PYTHONPATH: ''
+    build-packages:
+      - python3.9-venv
+      # PyGObject dependencies (e.g. pycairo)
+#      - libcairo2-dev
+      - python3.9-dev
+    stage-packages: [python3.9-venv, ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
 
     python-packages:
       - ocrmypdf
@@ -52,6 +65,12 @@ parts:
       - pipe
 
     override-build: |
+      # Work around a bug in snapcraft python plugin
+      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
+      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+      cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include
+      cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
       snapcraftctl build
       sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.6/site-packages/ocrmypdf/leptonica.py
 
