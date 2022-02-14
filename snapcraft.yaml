@@ -17,7 +17,7 @@ environment:
 
 apps:
   ocrmypdf:
-    command: usr/local/bin/snapcraft-preload $SNAP/bin/python3.9 -m ocrmypdf
+    command: usr/local/bin/snapcraft-preload $SNAP/bin/python3.8 -m ocrmypdf
     plugs:
       - desktop
       - desktop-legacy
@@ -39,16 +39,16 @@ parts:
     # See 'snapcraft plugins'
     plugin: python
     source: .
-    build-environment:
-      - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
-      # The gnome-3-38 ext sets both env variables to point to its own Python v3.8, so we need to fix them manually.
-      # $SNAPCRAFT_PART_INSTALL/bin is where the python3.9 executable lives.
-      - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
-      - PYTHONPATH: ''
-    build-packages:
-      - python3.9-venv
-      - python3.9-dev
-    stage-packages: [python3.9-venv, ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
+#    build-environment:
+#      - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
+#      # The gnome-3-38 ext sets both env variables to point to its own Python v3.8, so we need to fix them manually.
+#      # $SNAPCRAFT_PART_INSTALL/bin is where the python3.9 executable lives.
+#      - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
+#      - PYTHONPATH: ''
+#    build-packages:
+#      - python3.9-venv
+#      - python3.9-dev
+    stage-packages: [ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
 
     python-packages:
       - ocrmypdf
@@ -64,14 +64,14 @@ parts:
       - tqdm
       - pipe
 
-    override-build: |
-      # Work around a bug in snapcraft python plugin
-      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
-      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-      cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include
-      cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
-      snapcraftctl build
+#    override-build: |
+#      # Work around a bug in snapcraft python plugin
+#      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
+#      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+#      cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+#      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include
+#      cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
+#      snapcraftctl build
 
 #     currently leptonica lib appears to be correctly found by default - keeping this in case it is needed in the future
 #      sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.9/site-packages/ocrmypdf/leptonica.py
