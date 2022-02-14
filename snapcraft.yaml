@@ -17,8 +17,7 @@ environment:
 
 apps:
   ocrmypdf:
-    command: bin/python3.9 -m ocrmypdf
-
+    command: usr/local/bin/snapcraft-preload $SNAP/bin/python3.9 -m ocrmypdf
     plugs:
       - desktop
       - desktop-legacy
@@ -28,6 +27,14 @@ apps:
       - removable-media
 
 parts:
+  snapcraft-preload:
+    source: https://github.com/sergiusens/snapcraft-preload.git
+    plugin: cmake
+    build-packages:
+      - on amd64:
+        - gcc-multilib
+        - g++-multilib
+
   ocrmypdf:
     # See 'snapcraft plugins'
     plugin: python
