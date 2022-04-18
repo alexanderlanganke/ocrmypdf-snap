@@ -66,7 +66,8 @@ parts:
       - tqdm
       - pipe
 
-#    override-build: |
+    override-build: |
+      ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
 #      # Work around a bug in snapcraft python plugin
 #      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
 #      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
