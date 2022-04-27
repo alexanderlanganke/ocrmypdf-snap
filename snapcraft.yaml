@@ -1,7 +1,7 @@
 name: ocrmypdf # you probably want to 'snapcraft register <name>'
 title: ocrmypdf
 base: core20 # the base snap is the execution environment for this snap
-version: '1.0.7' # just for humans, typically '1.2+git' or '1.3.2'
+version: '1.0.8' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Hobby Project Snap for the Python Program "OCRmyPDF" by James R. Barlow
 description: OCRmyPDF by James R. Barlow
 grade: stable # must be 'stable' to release into candidate/stable channels
@@ -9,16 +9,15 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 #
 architectures: [amd64]
 
-#environment:
-#    TESSDATA_PREFIX: $SNAP/usr/share/tesseract-ocr/4.00/tessdata
-#    GS_LIB: $SNAP/usr/share/ghostscript/9.50/Resource/Init
-#    GS_FONTPATH: $SNAP/usr/share/ghostscript/9.50/Resource/Font
-#    LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu
+environment:
+    TESSDATA_PREFIX: $SNAP/usr/share/tesseract-ocr/4.00/tessdata
+    GS_LIB: $SNAP/usr/share/ghostscript/9.50/Resource/Init
+    GS_FONTPATH: $SNAP/usr/share/ghostscript/9.50/Resource/Font
+    LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu
 
 apps:
   ocrmypdf:
-#    command: usr/local/bin/snapcraft-preload $SNAP/bin/python3 -m ocrmypdf
-    command: usr/bin/snapcraft-preload $SNAP/bin/python3 -m ocrmypdf
+    command: usr/bin/snapcraft-preload $SNAP/usr/bin/python3 -m ocrmypdf
 
     plugs:
       - desktop
@@ -44,34 +43,46 @@ parts:
   ocrmypdf:
     # See 'snapcraft plugins'
     plugin: python
-    source: .
-#    build-environment:
-#      - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
-#      # The gnome-3-38 ext sets both env variables to point to its own Python v3.8, so we need to fix them manually.
-#      # $SNAPCRAFT_PART_INSTALL/bin is where the python3.9 executable lives.
-#      - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
-#      - PYTHONPATH: ''
-#    build-packages:
-#      - python3.9-venv
-#      - python3.9-dev
-    stage-packages: [ghostscript, icc-profiles-free, liblept5, libxml2, pngquant, tesseract-ocr-all, unpaper, qpdf, zlib1g]
+    source: https://github.com/ocrmypdf/OCRmyPDF.git
 
-    python-packages:
-      - ocrmypdf
-      - cffi  # must be a setup and install requirement
-      - coloredlogs # strictly optional
-      - img2pdf  # pure Python, so track HEAD closely
-      - pdfminer.six
-      - pikepdf
-      - Pillow
-      - pluggy
-      - reportlab
-      - setuptools
-      - tqdm
-      - pipe
+    stage-packages:
+#      - libpython3-stdlib
+#      - libpython3.8-stdlib
+#      - libpython3.8-minimal
+#      - python3-pip
+#      - python3-setuptools
+#      - python3-wheel
+#      - python3-venv
+#      - python3-minimal
+#      - python3-distutils
+#      - python3-pkg-resources
+#      - python3.8-minimal
+      - ghostscript
+      - icc-profiles-free
+      - liblept5
+      - libxml2
+      - pngquant
+      - tesseract-ocr-all
+      - unpaper
+      - qpdf
+      - zlib1g
 
-#    override-build: |
-#      ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
+#    python-packages:
+#      - ocrmypdf
+#      - cffi  # must be a setup and install requirement
+#      - coloredlogs # strictly optional
+#      - img2pdf  # pure Python, so track HEAD closely
+#      - pdfminer.six
+#      - pikepdf
+#      - Pillow
+#      - pluggy
+#      - reportlab
+#      - setuptools
+#      - tqdm
+#      - pipe
+
+    override-build: |
+      ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
 #      # Work around a bug in snapcraft python plugin
 #      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
 #      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
