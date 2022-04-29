@@ -17,8 +17,8 @@ environment:
 
 apps:
   ocrmypdf:
-    command: usr/bin/snapcraft-preload $SNAP/usr/bin/python3 -m ocrmypdf
-
+#    command: usr/bin/snapcraft-preload $SNAP/usr/bin/python3 -m ocrmypdf
+    command: usr/bin/snapcraft-preload python3 -m ocrmypdf
     plugs:
       - desktop
       - desktop-legacy
@@ -32,7 +32,7 @@ parts:
     source: https://github.com/sergiusens/snapcraft-preload.git
     plugin: cmake
     cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr -DLIBPATH=/lib
+      - -DCMAKE_INSTALL_PREFIX=/usr -DLIBPATH=/usr/lib
     build-packages:
       - on amd64:
         - gcc-multilib
@@ -67,21 +67,22 @@ parts:
       - qpdf
       - zlib1g
 
-#    python-packages:
-#      - ocrmypdf
-#      - cffi  # must be a setup and install requirement
-#      - coloredlogs # strictly optional
-#      - img2pdf  # pure Python, so track HEAD closely
-#      - pdfminer.six
-#      - pikepdf
-#      - Pillow
-#      - pluggy
-#      - reportlab
-#      - setuptools
-#      - tqdm
-#      - pipe
+    python-packages:
+      - ocrmypdf
+      - cffi  # must be a setup and install requirement
+      - coloredlogs # strictly optional
+      - img2pdf  # pure Python, so track HEAD closely
+      - pdfminer.six
+      - pikepdf
+      - Pillow
+      - pluggy
+      - reportlab
+      - setuptools
+      - tqdm
+      - pipe
 
     override-build: |
+      snapcraftctl build
       ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
 #      # Work around a bug in snapcraft python plugin
 #      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
