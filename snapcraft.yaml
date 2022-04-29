@@ -1,12 +1,12 @@
 name: ocrmypdf # you probably want to 'snapcraft register <name>'
 title: ocrmypdf
 base: core20 # the base snap is the execution environment for this snap
-version: '1.0.8' # just for humans, typically '1.2+git' or '1.3.2'
+version: '1.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Hobby Project Snap for the Python Program "OCRmyPDF" by James R. Barlow
 description: OCRmyPDF by James R. Barlow
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
-#
+
 architectures: [amd64]
 
 environment:
@@ -17,7 +17,6 @@ environment:
 
 apps:
   ocrmypdf:
-#    command: usr/bin/snapcraft-preload $SNAP/usr/bin/python3 -m ocrmypdf
     command: usr/bin/snapcraft-preload python3 -m ocrmypdf
     plugs:
       - desktop
@@ -46,17 +45,6 @@ parts:
     source: https://github.com/ocrmypdf/OCRmyPDF.git
 
     stage-packages:
-#      - libpython3-stdlib
-#      - libpython3.8-stdlib
-#      - libpython3.8-minimal
-#      - python3-pip
-#      - python3-setuptools
-#      - python3-wheel
-#      - python3-venv
-#      - python3-minimal
-#      - python3-distutils
-#      - python3-pkg-resources
-#      - python3.8-minimal
       - ghostscript
       - icc-profiles-free
       - liblept5
@@ -68,7 +56,7 @@ parts:
       - zlib1g
 
     python-packages:
-      - ocrmypdf
+#      - ocrmypdf
       - cffi  # must be a setup and install requirement
       - coloredlogs # strictly optional
       - img2pdf  # pure Python, so track HEAD closely
@@ -84,13 +72,6 @@ parts:
     override-build: |
       snapcraftctl build
       ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
-#      # Work around a bug in snapcraft python plugin
-#      # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
-#      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-#      cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-#      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include
-#      cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
-#      snapcraftctl build
 
 #     currently leptonica lib appears to be correctly found by default - keeping this in case it is needed in the future
 #      sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.9/site-packages/ocrmypdf/leptonica.py
