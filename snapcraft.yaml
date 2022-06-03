@@ -1,7 +1,7 @@
 name: ocrmypdf # you probably want to 'snapcraft register <name>'
 title: ocrmypdf
 base: core20 # the base snap is the execution environment for this snap
-version: '1.1' # just for humans, typically '1.2+git' or '1.3.2'
+version: '1.1.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Hobby Project Snap for the Python Program "OCRmyPDF" by James R. Barlow
 description: OCRmyPDF by James R. Barlow
 grade: stable # must be 'stable' to release into candidate/stable channels
@@ -58,8 +58,6 @@ parts:
     python-packages:
 #      - ocrmypdf
       - cffi  # must be a setup and install requirement
-      - coloredlogs # strictly optional
-      - img2pdf  # pure Python, so track HEAD closely
       - pdfminer.six
       - pikepdf
       - Pillow
@@ -72,20 +70,3 @@ parts:
     override-build: |
       snapcraftctl build
       ln -sf ../usr/lib/libsnapcraft-preload.so $SNAPCRAFT_PART_INSTALL/lib/libsnapcraft-preload.so
-
-#     currently leptonica lib appears to be correctly found by default - keeping this in case it is needed in the future
-#      sed -i 's/find_library(libname)/"liblept.so.5"/g' $SNAPCRAFT_PART_INSTALL/lib/python3.9/site-packages/ocrmypdf/leptonica.py
-
-# leaving this commented out. Recommended cleanup step which does NOT reduce snap size significantly
-# may be useful in future versions
-#  cleanup:
-#    after:  # Make this part run last; list all your other parts here
-#      - ocrmypdf
-#    plugin: nil
-#    build-snaps:  # List all content-snaps and base snaps you're using here
-#      - core20
-#    override-prime: |
-#      set -eux
-#      for snap in "core20"; do  # List all content-snaps and base snaps you're using here
-#          cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-#      done
